@@ -1,0 +1,35 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:id="@+id/container"
+    tools:context="com.ttarn.followme.MainActivity">
+    
+    <Button 
+        android:id="@+id/invite_btn"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:background="@color/BlueViolet"
+        android:layout_centerHorizontal="true"
+        android:text="@string/invite"
+        android:textSize="30dp"/>
+    
+    <Button
+        android:id="@+id/open_map_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/invite_btn"
+        android:layout_centerHorizontal="true"
+        android:background="@color/Coral"
+        android:text="@string/open_map"
+        android:textSize="30dp" />
+    
+    <fragment 
+        android:name="com.ttarn.followme.ContactsFragment"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:id="@+id/main_frag_contact"/>
+    
+
+</RelativeLayout>
