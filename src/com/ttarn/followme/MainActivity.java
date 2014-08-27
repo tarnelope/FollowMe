@@ -18,6 +18,10 @@ public class MainActivity extends Activity implements OnContactsInteractionListe
 	private Button inviteBtn;
 	
 	private ContactsFragment contactsFragment;
+	private ContactDetailFragment contactDetailFragment;
+	
+	 // If true, this is a larger screen device which fits two panes
+    private boolean isTwoPaneLayout;
 	
 	
 	@Override
@@ -55,8 +59,11 @@ public class MainActivity extends Activity implements OnContactsInteractionListe
 
 	@Override
 	public void onContactSelected(Uri contactUri) {
-		Log.d("MainActivty", "onContactSelected");
-		
+        // Otherwise single pane layout, start a new ContactDetailActivity with
+        // the contact Uri
+        Intent intent = new Intent(this, ContactDetailActivity.class);
+        intent.setData(contactUri);
+        startActivity(intent);
 	}
 
 

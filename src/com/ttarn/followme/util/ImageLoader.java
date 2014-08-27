@@ -140,7 +140,7 @@ public abstract class ImageLoader {
             bitmapWorkerTask.cancel(true);
             if (BuildConfig.DEBUG) {
                 final Object bitmapData = bitmapWorkerTask.data;
-                Log.d(TAG, "cancelWork - cancelled work for " + bitmapData);
+                //Log.d(TAG, "cancelWork - cancelled work for " + bitmapData);
             }
         }
     }
@@ -159,7 +159,7 @@ public abstract class ImageLoader {
             if (bitmapData == null || !bitmapData.equals(data)) {
                 bitmapWorkerTask.cancel(true);
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "cancelPotentialWork - cancelled work for " + data);
+                    //Log.d(TAG, "cancelPotentialWork - cancelled work for " + data);
                 }
             } else {
                 // The same work is already in progress.
@@ -202,7 +202,7 @@ public abstract class ImageLoader {
         @Override
         protected Bitmap doInBackground(Object... params) {
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "doInBackground - starting work");
+                //Log.d(TAG, "doInBackground - starting work");
             }
 
             data = params[0];
@@ -234,7 +234,7 @@ public abstract class ImageLoader {
             }
 
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "doInBackground - finished work");
+                //Log.d(TAG, "doInBackground - finished work");
             }
 
             return bitmap;
@@ -253,7 +253,7 @@ public abstract class ImageLoader {
             final ImageView imageView = getAttachedImageView();
             if (bitmap != null && imageView != null) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "onPostExecute - setting bitmap");
+                   // Log.d(TAG, "onPostExecute - setting bitmap");
                 }
                 setImageBitmap(imageView, bitmap);
             }
