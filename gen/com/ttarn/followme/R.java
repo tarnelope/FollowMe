@@ -330,6 +330,11 @@ containing a value of this type.
          */
         public static final int zOrderOnTop=0x7f010010;
     }
+    public static final class bool {
+        /**  Default is to use a single pane layout 
+         */
+        public static final int has_two_panes=0x7f0b0000;
+    }
     public static final class color {
         public static final int AliceBlue=0x7f060052;
         public static final int AntiqueWhite=0x7f060053;
@@ -584,10 +589,12 @@ containing a value of this type.
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
          */
-        public static final int activity_horizontal_margin=0x7f0b0000;
-        public static final int activity_vertical_margin=0x7f0b0001;
-        public static final int margin_10dp=0x7f0b0002;
-        public static final int width_300dp=0x7f0b0003;
+        public static final int activity_horizontal_margin=0x7f0c0000;
+        public static final int activity_vertical_margin=0x7f0c0001;
+        public static final int listview_item_padding=0x7f0c0005;
+        public static final int margin_10dp=0x7f0c0002;
+        public static final int padding=0x7f0c0004;
+        public static final int width_300dp=0x7f0c0003;
     }
     public static final class drawable {
         public static final int common_signin_btn_icon_dark=0x7f020000;
@@ -632,15 +639,21 @@ containing a value of this type.
         public static final int quickcontact_badge_small_unpressed=0x7f020027;
     }
     public static final class id {
-        public static final int action_settings=0x7f08001b;
+        public static final int action_settings=0x7f080024;
         public static final int book_now=0x7f080010;
+        public static final int button_view_address=0x7f08001e;
         public static final int buyButton=0x7f08000a;
         public static final int buy_now=0x7f08000f;
         public static final int buy_with_google=0x7f08000e;
         public static final int classic=0x7f080011;
-        public static final int contacts_listview=0x7f08001a;
+        public static final int contact_detail_header=0x7f08001c;
+        public static final int contact_detail_item=0x7f08001d;
+        public static final int contact_details_layout=0x7f08001b;
+        public static final int contact_image=0x7f080019;
+        public static final int contact_name=0x7f08001a;
+        public static final int contacts_listview=0x7f080020;
         public static final int container=0x7f080014;
-        public static final int fragment_contacts=0x7f080019;
+        public static final int fragment_contacts=0x7f08001f;
         public static final int grayscale=0x7f080012;
         public static final int holo_dark=0x7f080005;
         public static final int holo_light=0x7f080006;
@@ -649,6 +662,9 @@ containing a value of this type.
         public static final int main_frag_contact=0x7f080017;
         public static final int map=0x7f080018;
         public static final int match_parent=0x7f08000c;
+        public static final int menu_add_contact=0x7f080023;
+        public static final int menu_edit_contact=0x7f080021;
+        public static final int menu_search=0x7f080022;
         public static final int monochrome=0x7f080013;
         public static final int none=0x7f080000;
         public static final int normal=0x7f080001;
@@ -662,20 +678,37 @@ containing a value of this type.
         public static final int wrap_content=0x7f08000d;
     }
     public static final class integer {
+        public static final int contact_detail_info_percent=0x7f090002;
+        /**  These are the default percent values that the contact photo and information should take up
+         in the ContactDetailFragment. 
+         */
+        public static final int contact_detail_photo_percent=0x7f090001;
         public static final int google_play_services_version=0x7f090000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int activity_map=0x7f030001;
-        public static final int contact_list_item=0x7f030002;
-        public static final int contacts_list_fragment=0x7f030003;
-        public static final int contacts_list_view=0x7f030004;
+        public static final int contact_detail_fragment=0x7f030002;
+        public static final int contact_detail_item=0x7f030003;
+        public static final int contact_list_item=0x7f030004;
+        public static final int contacts_list_fragment=0x7f030005;
+        public static final int contacts_list_view=0x7f030006;
     }
     public static final class menu {
-        public static final int map=0x7f0c0000;
+        public static final int contact_detail_menu=0x7f0d0000;
+        public static final int contact_list_menu=0x7f0d0001;
+        public static final int map=0x7f0d0002;
     }
     public static final class string {
         public static final int action_settings=0x7f07001c;
+        public static final int activity_contact_detail=0x7f070023;
+        public static final int activity_contacts_list=0x7f070022;
+        public static final int address_button_description=0x7f070027;
+        /**  Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by
+         alphabet using ListView fast scroll. 
+         */
+        public static final int alphabet=0x7f07002d;
+        public static final int app_description=0x7f070025;
         public static final int app_name=0x7f07001a;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
@@ -766,10 +799,27 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f070018;
+        public static final int contacts_list_search_results_title=0x7f070024;
         public static final int hello_world=0x7f07001b;
+        public static final int imageview_description=0x7f070026;
         public static final int invite=0x7f070020;
+        public static final int menu_add_contact=0x7f070029;
+        public static final int menu_edit_contact=0x7f07002a;
+        public static final int menu_search=0x7f070028;
+        public static final int no_address=0x7f07002f;
+        public static final int no_contact_selected=0x7f07002b;
         public static final int no_contacts=0x7f070021;
+        public static final int no_intent_found=0x7f070030;
         public static final int open_map=0x7f07001f;
+        public static final int search_hint=0x7f07002c;
+        /**  When using ContactsContract.Contacts#CONTENT_FILTER_URI to search contacts, a match occurs
+         when using a number of different fields, such as name, e-mail address, address, phone
+         number, etc. When a match occurs that is not the name, there is currently no way to tell
+         which other field was matched. This string is displayed in the secondary display text in
+         ContactsListFragment when a search query match occurs that is not the display name.
+         
+         */
+        public static final int search_match_other=0x7f07002e;
         public static final int texting_btn=0x7f07001e;
         public static final int texting_text=0x7f07001d;
         /**  Text on a placeholder buy button when Google Play services is not

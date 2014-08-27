@@ -1,16 +1,18 @@
 package com.ttarn.followme;
 
+import com.ttarn.followme.ContactsFragment.OnContactsInteractionListener;
+
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnContactsInteractionListener {
 	
 	private Button openMapBtn;
 	private Button inviteBtn;
@@ -47,6 +49,20 @@ public class MainActivity extends Activity {
 				
 			}
 		});
+		
+	}
+
+
+	@Override
+	public void onContactSelected(Uri contactUri) {
+		Log.d("MainActivty", "onContactSelected");
+		
+	}
+
+
+	@Override
+	public void onSelectionCleared() {
+		// TODO Auto-generated method stub
 		
 	}
 

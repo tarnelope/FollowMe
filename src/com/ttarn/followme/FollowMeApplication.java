@@ -2,7 +2,6 @@ package com.ttarn.followme;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.net.Uri;
 
 public class FollowMeApplication extends Application {
 	
