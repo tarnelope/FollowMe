@@ -24,22 +24,22 @@ import java.util.Locale;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ListFragment;
+import android.app.LoaderManager;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Photo;
-import android.app.ListFragment;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.widget.CursorAdapter;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.TextAppearanceSpan;
@@ -55,6 +55,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.QuickContactBadge;
 import android.widget.SearchView;
@@ -113,6 +114,12 @@ public class ContactsFragment extends ListFragment implements
     // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
+    
+    /*
+     * ContactID for retrieve ContactNumber
+     */
+    Uri uriContact;
+    String contactID; 
 
     /**
      * Fragments require an empty constructor.
@@ -271,21 +278,25 @@ public class ContactsFragment extends ListFragment implements
         cursor.moveToPosition(position);
 
         // Creates a contact lookup Uri from contact ID and lookup_key
-        final Uri uri = Contacts.getLookupUri(
+        uriContact = Contacts.getLookupUri(
                 cursor.getLong(ContactsQuery.ID),
                 cursor.getString(ContactsQuery.LOOKUP_KEY));
-
+        
+        retrieveContactNumber();
+        
         // Notifies the parent activity that the user selected a contact. In a two-pane layout, the
         // parent activity loads a ContactDetailFragment that displays the details for the selected
         // contact. In a single-pane layout, the parent activity starts a new activity that
         // displays contact details in its own Fragment.
-        mOnContactSelectedListener.onContactSelected(uri);
+        mOnContactSelectedListener.onContactSelected(uriContact);
 
         // If two-pane layout sets the selected item to checked so it remains highlighted. In a
         // single-pane layout a new activity is started so this is not needed.
         if (mIsTwoPaneLayout) {
             getListView().setItemChecked(position, true);
         }
+        
+        
     }
 
     /**
@@ -444,6 +455,44 @@ public class ContactsFragment extends ListFragment implements
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    private void retrieveContactNumber() {
+    	 
+        String contactNumber = null;
+ 
+        // getting contacts ID
+        Cursor cursorID = getActivity().getContentResolver().query(uriContact,
+                new String[]{ContactsContract.Contacts._ID},
+                null, null, null);
+ 
+        if (cursorID.moveToFirst()) {
+ 
+            contactID = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts._ID));
+        }
+ 
+        cursorID.close();
+ 
+        Log.d(TAG, "Contact ID: " + contactID);
+ 
+        // Using the contact ID now we will get contact phone number
+        Cursor cursorPhone = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
+ 
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? AND " +
+                        ContactsContract.CommonDataKinds.Phone.TYPE + " = " +
+                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE,
+ 
+                new String[]{contactID},
+                null);
+ 
+        if (cursorPhone.moveToFirst()) {
+            contactNumber = cursorPhone.getString(cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        }
+ 
+        cursorPhone.close();
+ 
+        Log.d(TAG, "Contact Phone Number: " + contactNumber);
     }
 
     @Override
@@ -881,7 +930,6 @@ public class ContactsFragment extends ListFragment implements
         // restrict results to contacts that have a display name and are linked to visible groups.
         // Notice that the search on the string provided by the user is implemented by appending
         // the search string to CONTENT_FILTER_URI.
-        @SuppressLint("InlinedApi")
         final static String SELECTION =
                 (Utils.hasHoneycomb() ? Contacts.DISPLAY_NAME_PRIMARY : Contacts.DISPLAY_NAME) +
                 "<>''" + " AND " + Contacts.IN_VISIBLE_GROUP + "=1";

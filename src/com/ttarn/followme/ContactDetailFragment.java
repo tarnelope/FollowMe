@@ -352,6 +352,7 @@ public class ContactDetailFragment extends Fragment implements
                     // ContactDetailQuery.DISPLAY_NAME maps to the appropriate display
                     // name field based on OS version.
                     final String contactName = data.getString(ContactDetailQuery.DISPLAY_NAME);
+                    
                     if (mIsTwoPaneLayout && mContactName != null) {
                         // In the two pane layout, there is a dedicated TextView
                         // that holds the contact name.
@@ -389,6 +390,7 @@ public class ContactDetailFragment extends Fragment implements
                                 data.getInt(ContactAddressQuery.TYPE),
                                 data.getString(ContactAddressQuery.LABEL),
                                 data.getString(ContactAddressQuery.ADDRESS));
+                        
                         // Adds the new address layout to the details layout
                         mDetailsLayout.addView(layout, layoutParams);
                     } while (data.moveToNext());
