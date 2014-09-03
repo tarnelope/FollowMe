@@ -11,13 +11,20 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    
     
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    
+    <permission android:name="com.example.gcm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.ttarn.followme.permission.C2D_MESSAGE"/>
+    
+    
     <application
         android:name="com.ttarn.followme.FollowMeApplication"
         android:allowBackup="true"
@@ -28,17 +35,15 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+           
         </activity>
         
          <activity
             android:name=".MapActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-               
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
@@ -56,5 +61,18 @@
         <meta-data
     android:name="com.google.android.maps.v2.API_KEY"
     android:value="AIzaSyAwBqUy1qEpavsPYU8xekExVtQpyS_LMaA"/>
+        
+        <receiver
+            android:name=".GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.ttarn.followme" />
+            </intent-filter>
+        </receiver>
+        
+        <service android:name=".BroadcastLocationService" />
     </application>
 </manifest>
+
+<!--  <service android:name=".GcmIntentService" /> -->

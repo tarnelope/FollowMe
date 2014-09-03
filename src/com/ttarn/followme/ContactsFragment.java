@@ -118,8 +118,9 @@ public class ContactsFragment extends ListFragment implements
     /*
      * ContactID for retrieve ContactNumber
      */
-    Uri uriContact;
-    String contactID; 
+    private Uri uriContact;
+    private String contactID; 
+    private String contactNumber;
 
     /**
      * Fragments require an empty constructor.
@@ -269,6 +270,11 @@ public class ContactsFragment extends ListFragment implements
         mImageLoader.setPauseWork(false);
     }
 
+    /*
+     * This function is called when a contact is selected. Ideally, this will send the invitation for the
+     * recipient to start tracking the sender's GPS details.
+     * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         // Gets the Cursor object currently bound to the ListView
@@ -457,9 +463,12 @@ public class ContactsFragment extends ListFragment implements
         return super.onOptionsItemSelected(item);
     }
     
-    private void retrieveContactNumber() {
+    /*
+     * Function retrieves the selected contact's phone number.
+     */
+    private String retrieveContactNumber() {
     	 
-        String contactNumber = null;
+        contactNumber = null;
  
         // getting contacts ID
         Cursor cursorID = getActivity().getContentResolver().query(uriContact,
@@ -493,6 +502,8 @@ public class ContactsFragment extends ListFragment implements
         cursorPhone.close();
  
         Log.d(TAG, "Contact Phone Number: " + contactNumber);
+        
+        return contactNumber;
     }
 
     @Override
