@@ -46,7 +46,7 @@ public class MapActivity extends Activity implements SpaceStationListener {
      * Substitute you own sender ID here. This is the project number you got
      * from the API Console, as described in "Getting Started."
      */
-    private String SENDER_ID = "515606369786";
+    private static final String GCM_SENDER_ID = "515606369786";
     
 	private GoogleMap googleMap;
 	private LocationManager locationManager;
@@ -72,6 +72,7 @@ public class MapActivity extends Activity implements SpaceStationListener {
     	@Override
     	public void onReceive(Context ctx, Intent intent) {
     		updateSpaceStation(intent);
+    		setResultCode(Activity.RESULT_OK);
     	}
     };
 
@@ -119,8 +120,11 @@ public class MapActivity extends Activity implements SpaceStationListener {
 		stopService(intent);
 	}
 	
+	/*
+	 * Purpose: Retrieve lat and long coordinates from intent and create 
+	 * a marker at those coordinates.
+	 */
 	private void updateSpaceStation(Intent intent) {
-		
 		Log.d(TAG, "updateSpaceStation");
 		issLat = intent.getDoubleExtra("lat", 0);
 		issLong = intent.getDoubleExtra("long", 0);
@@ -254,7 +258,7 @@ public class MapActivity extends Activity implements SpaceStationListener {
                 if (gcm == null) {
                     gcm = GoogleCloudMessaging.getInstance(context);
                 }
-                regid = gcm.register(SENDER_ID);
+                regid = gcm.register(GCM_SENDER_ID);
                 msg = "Device registered, registration ID=" + regid;
 
                 // You should send the registration ID to your server over HTTP,
