@@ -1,7 +1,5 @@
 package com.ttarn.followme;
 
-import com.ttarn.followme.ContactsFragment.OnContactsInteractionListener;
-
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -11,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import com.ttarn.followme.ContactsFragment.OnContactsInteractionListener;
 
 public class MainActivity extends Activity implements OnContactsInteractionListener {
 	

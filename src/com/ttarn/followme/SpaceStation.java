@@ -14,17 +14,22 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class SpaceStation {
 
 	private final String TAG = getClass().getSimpleName();
+	
+	private GoogleMap gMap;
 	
 	public interface SpaceStationListener {
 		public void setSpaceStation();
@@ -32,92 +37,116 @@ public class SpaceStation {
 		
 	SpaceStationListener ssListener;
 	
-	    private Double latitude;
-	    private Double longitude;
-	    
-	    private Intent intent;
-	    
-	    public SpaceStation() {
+	    private Double mLat;
+	    private Double mLong;
+	    private GetSpaceStationLocationRequest req;
+	    public SpaceStation(GoogleMap map) {
 	    	
-	    	GetSpaceStationLocationRequest req = new GetSpaceStationLocationRequest();
+	    	gMap = map;
+	    	
+	    	req = new GetSpaceStationLocationRequest();
 	    	req.execute();
-	    	
-	    }
-	    
-	    public void setSpaceStationListener(Activity a) {
-	    	ssListener = (SpaceStationListener) a;
 	    }
 
 	    public Double getLatitude() {
-	        return latitude;
+	        return mLat;
 	    }
 
 	    public void setLatitude(Double latitude) {
-	        this.latitude = latitude;
+	        this.mLat = latitude;
 	    }
 
 	    public Double getLongitude() {
-	        return longitude;
+	        return mLong;
 	    }
 
 	    public void setLongitude(Double longitude) {
-	        this.longitude = longitude;
+	        this.mLong = longitude;
 	    }
 	    
-	    private class GetSpaceStationLocationRequest extends AsyncTask<String, Void, String> {
+	    public void cancelSpaceStationTask() {
+	    	req.cancel(true);
+	    }
+	    
+	    private class GetSpaceStationLocationRequest extends AsyncTask<Void, LatLng, Void> {
 
 			@Override
-			protected String doInBackground(String... params) {
-				StringBuilder builder = new StringBuilder();
-		    	HttpClient client = new DefaultHttpClient();
-		    	HttpGet httpGet = new HttpGet("http://api.open-notify.org/iss-now.json");
-		    	try {
-		    		
-		    		HttpResponse response = client.execute(httpGet);
-		    		StatusLine statusLine = response.getStatusLine();
-		    		int statusCode = statusLine.getStatusCode();
-		    		if (statusCode == 200) {
-		    			HttpEntity entity = response.getEntity();
-		    			InputStream content = entity.getContent();
-		    			BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-		    			String line;
-		    			while ((line = reader.readLine()) != null) {
-		    				builder.append(line);
-		    			}
-		    		} else {
-		    			Log.d(TAG, "failed to download file");
-		    		}
-		    	} catch (IOException e){
-		    		e.printStackTrace();
-		    	}
-		    	String output = builder.toString();
+			protected Void doInBackground(Void... params) {
+				while (!isCancelled()) {
+					
+					
+					StringBuilder builder = new StringBuilder();
+			    	HttpClient client = new DefaultHttpClient();
+			    	HttpGet httpGet = new HttpGet("http://api.open-notify.org/iss-now.json");
+			    	try {
+			    		
+			    		HttpResponse response = client.execute(httpGet);
+			    		StatusLine statusLine = response.getStatusLine();
+			    		int statusCode = statusLine.getStatusCode();
+			    		if (statusCode == 200) {
+			    			HttpEntity entity = response.getEntity();
+			    			InputStream content = entity.getContent();
+			    			BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+			    			String line;
+			    			while ((line = reader.readLine()) != null) {
+			    				builder.append(line);
+			    			}
+			    		} else {
+			    			Log.d(TAG, "failed to download file");
+			    		}
+			    	} catch (IOException e){
+			    		e.printStackTrace();
+			    	}
+			    	String str = builder.toString();
+			    	
+			    	try {
+						JSONObject ship = new JSONObject(str);
+						String status = ship.getString("message");
+						
+						if (status.equalsIgnoreCase("success")) {
+							JSONObject position = ship.getJSONObject("iss_position");
+							
+							setLatitude(position.getDouble("latitude"));
+							setLongitude(position.getDouble("longitude"));
+							
+							LatLng coordinates = new LatLng(mLat, mLong);
+							publishProgress(coordinates);
+							
+						}
+						
+					} catch (JSONException ex) {
+							ex.printStackTrace();
+					}
+					/*Log.d("Latitude is ", mLat.toString());
+					Log.d("Longitutde is ", mLong.toString()); */
+					
+					try{
+	                    Thread.sleep(1000);
+	                }catch (InterruptedException e){
+	                    return null;
+	                }
 		    	
-				return output;
+				}
+				return null;
 			}
 			
 			@Override
-			public void onPostExecute(String str) {
-				try {
-				JSONObject ship = new JSONObject(str);
-				String status = ship.getString("message");
-				Log.d("Space Station status is ", status);
-				if (status.equalsIgnoreCase("success")) {
-					JSONObject position = ship.getJSONObject("iss_position");
-					double lat = position.getDouble("latitude");
-					double longi = position.getDouble("longitude");
-					setLatitude(lat);
-					setLongitude(longi);
-				}
+			public void onProgressUpdate(LatLng... coords) {
+				gMap.clear();
 				
-				} catch (JSONException ex) {
-					ex.printStackTrace();
-				}
-				Log.d("Latitude is ", latitude.toString());
-				Log.d("Longitutde is ", longitude.toString());
-				ssListener.setSpaceStation();
+				MarkerOptions markerOptions = new MarkerOptions()
+				.position(coords[0])
+				.title("ISS STATION")
+				.icon(BitmapDescriptorFactory.fromAsset("deathstar.png"));
+				
+				gMap.addMarker(markerOptions);
+			}
+			
+			@Override
+			public void onPostExecute(Void v) {
+
 			}
 	    	
 	    }
 
 	}
-
